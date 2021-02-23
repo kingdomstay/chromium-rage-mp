@@ -1,0 +1,6 @@
+{
+  "devDependencies": {
+    "@types/ragemp-s": "github:CocaColaBear/types-ragemp-s#v1.0",
+    "typescript": "^4.1.5"
+  }
+}
