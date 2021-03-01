@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Notifications</title>
+    <link rel="stylesheet" href="../assets/stylesheets/main.css">
+    <link rel="stylesheet" href="../assets/libs/toastify.css">
+    <style>
+      .error {
+        background: #FF5151;
+        font-size: 21px;
+        border-radius: 25px;
+        padding: 10px 20px;
+        font-weight: 500;
+        box-shadow: 0 5px 10px 2px rgba(0, 0, 0, .1);
+        color: #fff;
+      }
+      .info {
+        background: #5196FF;
+        font-size: 21px;
+        border-radius: 25px;
+        padding: 10px 20px;
+        font-weight: 500;
+        box-shadow: 0 5px 10px 2px rgba(0, 0, 0, .1);
+        color: #fff;
+      }
+      .warning {
+        background: #E7FF51;
+        font-size: 21px;
+        border-radius: 25px;
+        padding: 10px 20px;
+        font-weight: 500;
+        box-shadow: 0 5px 10px 2px rgba(0, 0, 0, .1);
+        color: #000;
+      }
+      .success {
+        background: #51FF8C;
+        font-size: 21px;
+        border-radius: 25px;
+        padding: 10px 20px;
+        font-weight: 500;
+        box-shadow: 0 5px 10px 2px rgba(0, 0, 0, .1);
+        color: #000;
+      }
+    </style>
+  </head>
+  <body>
+
+    <script type="text/javascript" src="../assets/libs/toastify.min.js"></script>
+    <script type="text/javascript">
+
+
+      function error(msg) {
+        Toastify({
+          text: msg,
+          duration: 3000,
+          gravity: "top",
+          position: "center",
+          className: "error"
+        }).showToast()
+      }
+      function info(msg) {
+        Toastify({
+          text: msg,
+          duration: 3000,
+          gravity: "top",
+          position: "center",
+          className: "info"
+        }).showToast()
+      }
+      function warning(msg) {
+        Toastify({
+          text: msg,
+          duration: 3000,
+          gravity: "top",
+          position: "center",
+          className: "warning"
+        }).showToast()
+      }
+      function success(msg) {
+        Toastify({
+          text: msg,
+          duration: 3000,
+          gravity: "top",
+          position: "center",
+          className: "success"
+        }).showToast()
+      }
+    </script>
+  </body>
+</html>

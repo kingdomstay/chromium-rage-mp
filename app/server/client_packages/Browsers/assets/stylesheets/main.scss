@@ -1,0 +1,51 @@
+@import "reset";
+
+@font-face {
+  font-family: 'Montserrat';
+  font-weight: normal;
+  src: url(../fonts/montserrat/Montserrat-Regular.ttf);
+}
+@font-face {
+  font-family: 'Montserrat';
+  font-weight: 500;
+  src: url(../fonts/montserrat/Montserrat-Medium.ttf);
+}
+@font-face {
+  font-family: 'Montserrat';
+  font-weight: 600;
+  src: url(../fonts/montserrat/Montserrat-SemiBold.ttf);
+}
+@font-face {
+  font-family: 'Montserrat';
+  font-weight: bold;
+  src: url(../fonts/syncopate/Syncopate-Bold.ttf);
+}
+@font-face {
+  font-family: 'Syncopate';
+  font-weight: normal;
+  src: url(../fonts/syncopate/Syncopate-Regular.ttf);
+}
+@font-face {
+  font-family: 'Syncopate';
+  font-weight: bold;
+  src: url(../fonts/syncopate/Syncopate-Bold.ttf);
+}
+
+.container {
+  display: grid;
+  .container__primary {
+    background: #ffffff;
+  }
+  .container__secondary {
+    background: rgba(245, 245, 245, 0.9);
+  }
+}
+
+.backdrop {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.65);
+}

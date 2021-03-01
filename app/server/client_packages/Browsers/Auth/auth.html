@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Auth</title>
+    <link href="../assets/stylesheets/main.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="backdrop">
+      <div class="modal">
+        <div class="content content-loading">
+          <p class="text">Выполняется загрузка информации об аккаунте..</p>
+        </div>
+        <div class="content content-login">
+          <input class="input content-login__login" placeholder="Ваш логин" name="login-login">
+          <input class="input content-login__pass" type="password" placeholder="и пароль" name="login-password">
+        </div>
+        <div class="content content-register">
+          <h1 class="title">Регистрация</h1>
+          <input class="input" placeholder="Логин" name="reg-username">
+          <input class="input" placeholder="Email" name="reg-email">
+          <input class="input" type="password" placeholder="Пароль" name="reg-password">
+          <input class="input" type="password" placeholder="Повторите пароль" name="reg-repeat-password">
+          <!--<input type="submit" class="submit" value="Продолжить">-->
+        </div>
+        <span class="logo">CHROMIUM RP</span>
+      </div>
+    </div>
+    <script src="../assets/libs/jquery.min.js"></script>
+    <script type="text/javascript">
+    let disabled = false
+    let currentSlide = "loading";
+
+
+    $(document).ready(() => {
+      mp.trigger('C_AuthWindowLoaded')
+    });
+    $(document).keydown((e) => {
+      if (disabled) {
+        return
+      }
+      if (e.key == "Enter") {
+        if (currentSlide == 'login') {
+          tryLogin()
+        } else if (currentSlide == 'register') {
+          tryRegister()
+        }
+      }
+    });
+
+    function redirectToSlide(name) {
+      $(`.content-${currentSlide}`).css("opacity", "0");
+      setTimeout(() => {
+        $(`.content-${currentSlide}`).css("display", "none");
+        currentSlide = name;
+        $(`.content-${name}`).css("display", "flex");
+        $(`.content-${name}`).css("opacity", "0.005");
+        setTimeout(() => {
+          $(`.content-${name}`).css("opacity", "1");
+        }, 100);
+      }, 200);
+    }
+    function loading(state) {
+      if (state) {
+        disabled = true
+        $('input[name="reg-username"]').prop('disabled', true)
+        $('input[name="reg-email"]').prop('disabled', true)
+        $('input[name="reg-password"]').prop('disabled', true)
+        $('input[name="reg-repeat-password"]').prop('disabled', true)
+        $('input[name="login-login"]').prop('disabled', true)
+        $('input[name="login-password"]').prop('disabled', true)
+      } else {
+        disabled = false
+        $('input[name="reg-username"]').prop('disabled', false)
+        $('input[name="reg-email"]').prop('disabled', false)
+        $('input[name="reg-password"]').prop('disabled', false)
+        $('input[name="reg-repeat-password"]').prop('disabled', false)
+        $('input[name="login-login"]').prop('disabled', false)
+        $('input[name="login-password"]').prop('disabled', false)
+      }
+    }
+    function resetRegisterFields() {
+      $('input[name="reg-username"]').val('')
+      $('input[name="reg-email"]').val('')
+      $('input[name="reg-password"]').val('')
+      $('input[name="reg-repeat-password"]').val('')
+    }
+    function resetPasswordField() {
+      $('input[name="login-password"]').val('')
+      $('input[name="login-password"]').focus()
+    }
+
+    function tryRegister() {
+      loading(true)
+      mp.trigger('C_SendRegisterCredentialsToClient', `["${$('input[name="reg-username"]').val()}", "${$('input[name="reg-email"]').val()}", "${$('input[name="reg-password"]').val()}", "${$('input[name="reg-repeat-password"]').val()}"]`)
+    }
+    function tryLogin() {
+      loading(true)
+      mp.trigger('C_SendLoginCredentialsToClient', `["${$('input[name="login-login"]').val()}", "${$('input[name="login-password"]').val()}"]`)
+    }
+
+    function playerRegistered() {
+      resetRegisterFields()
+      loading(false)
+      redirectToSlide('login')
+    }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,114 @@
+.modal {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+}
+.modal .content-login {
+  display: none;
+  width: 65%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.modal .content-login .input {
+  width: 100%;
+  font-size: 64px;
+  text-align: center;
+}
+.modal .content-login .input::placeholder {
+  opacity: 1;
+  color: #ffffff;
+  font-weight: 600;
+  transition: 0.1s;
+}
+.modal .content-login .input:focus::placeholder {
+  opacity: 0.1;
+  transition: 0.1s;
+}
+.modal .content-login .input[type=password] {
+  letter-spacing: 10px;
+}
+.modal .content-login .input[type=password]::placeholder {
+  letter-spacing: 0;
+}
+.modal .content-register {
+  display: none;
+  flex-direction: column;
+  width: 85%;
+  position: fixed;
+  top: 90px;
+}
+.modal .content-register .input {
+  font-size: 48px;
+  width: 50%;
+}
+.modal .title {
+  text-align: left;
+  font-size: 72px;
+  font-weight: bold;
+  padding-bottom: 75px;
+}
+.modal .input {
+  display: block;
+  padding: 0;
+  font-family: "Montserrat", sans-serif;
+  margin-bottom: 15px;
+  font-weight: 600;
+  outline: none;
+  background: transparent;
+  color: #ffffff;
+  border: none;
+}
+.modal .input::placeholder {
+  opacity: 1;
+  color: #ffffff;
+  font-weight: 600;
+  transition: 0.1s;
+}
+.modal .input:focus::placeholder {
+  opacity: 0.1;
+  transition: 0.1s;
+}
+.modal .input[type=password] {
+  letter-spacing: 10px;
+}
+.modal .input[type=password]::placeholder {
+  letter-spacing: 0;
+}
+.modal .text {
+  font-size: 24px;
+}
+.modal .submit {
+  width: 25%;
+  display: inherit;
+  outline: none;
+  color: #ffffff;
+  border: none;
+  margin: 10px 0;
+  padding: 0 15px 0 0;
+  background: transparent;
+  font-weight: bold;
+  font-size: 64px;
+  font-family: "Montserrat", sans-serif;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.modal .submit:hover {
+  opacity: 0.75;
+}
+.modal .logo {
+  color: rgba(245, 245, 245, 0.9);
+  font-family: "Syncopate", sans-serif;
+  font-size: 32px;
+  position: fixed;
+  font-weight: bold;
+  bottom: 30px;
+}
+.modal .content {
+  transition: 0.2s opacity;
+}
+
+/*# sourceMappingURL=style.css.map */
