@@ -1,15 +1,12 @@
 # RAGE:MP Chromium Roleplay
 
 ### Before running server
-Build `.ts` files:
-``` bash
-cd app/src/client
-tsc
-```
-``` bash
-cd app/src/server
-tsc
-```
+Build __.ts__ files ` npm run tsc:build ` or ` npm run tsc:watch ` for track changes in the code.
 
-### Recompile server files and start server
-#### **Run `start.bat`**
+Also build __.scss__ files ` npm run sass:build ` or ` npm run sass:watch ` for track changes in the code.
+
+#### Already done:
+- Authentication
+- Notifications system
+- Jobs
+    1. Bus Driver

@@ -25,11 +25,7 @@ async function possibleAccounts(player: PlayerMp) { // TODO: В будущем �
     const socialClub = player.socialClub
     const conn = await db.getConnection()
     const rows = await conn.query("SELECT id FROM users WHERE social_club=(?)", [socialClub])
-    if (rows[0]) {
-      return true
-    } else {
-      return false
-    }
+    return !!rows[0];
   } catch (err) {
     log.error(err)
   }
@@ -53,16 +49,19 @@ mp.events.add('S_SendLoginCredentialsToServer', async (player, args) => {
     }
 
     const row = rows[0]
+    console.log(row)
     if (!bcrypt.compareSync(data[1], row.hash_password)) {
       player.call('C_Auth-handler', ['LOGIN_FAIL'])
       return
     }
 
     player.call('C_Auth-handler', ['SUCCESS_LOGIN'])
-    mp.events.call('playerAuth', (player))
+    mp.events.call('playerAuth', player, row)
+    player.setVariable('userId', row.id)
+    player.auth = true
     player.alpha = 255
-    player.dimension = 0
-    player.position = new mp.Vector3(-1402.4600830078125, -152.7124786376953, 47.661441802978516)
+    player.dimension = row.last_position.dimension
+    player.position = new mp.Vector3(row.last_position.x, row.last_position.y, row.last_position.z)
   } catch (err) {
     log.error(err)
     player.call('C_Auth-hanlder')
@@ -117,5 +116,24 @@ mp.events.add('S_SendRegisterCredentialsToServer', async (player, args) => {
   }
 })
 
+/** Методы */
+async function savePlayerLastPosition(player: any) {
+  if (!player.auth) return
+  const id = player.getVariable('userId')
+  const lastPosition = {
+    x: player.position.x,
+    y: player.position.y,
+    z: player.position.z,
+    dimension: player.dimension
+  }
+  try {
+    const conn = await db.getConnection()
+    console.log(lastPosition)
+    await conn.query("UPDATE users SET last_position=(?) WHERE id=(?)", [lastPosition, id])
+  } catch(err) {
+    log.error(err)
+  }
+}
 
-/** 3 этап. Пускаем игрока на сервер */
+/** События */
+mp.events.add('playerQuit', savePlayerLastPosition)

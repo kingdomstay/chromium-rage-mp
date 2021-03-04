@@ -78,13 +78,7 @@ function possibleAccounts(player) {
                     return [4 /*yield*/, conn.query("SELECT id FROM users WHERE social_club=(?)", [socialClub])];
                 case 2:
                     rows = _a.sent();
-                    if (rows[0]) {
-                        return [2 /*return*/, true];
-                    }
-                    else {
-                        return [2 /*return*/, false];
-                    }
-                    return [3 /*break*/, 4];
+                    return [2 /*return*/, !!rows[0]];
                 case 3:
                     err_1 = _a.sent();
                     log.error(err_1);
@@ -120,15 +114,18 @@ mp.events.add('S_SendLoginCredentialsToServer', function (player, args) { return
                     return [2 /*return*/];
                 }
                 row = rows[0];
+                console.log(row);
                 if (!bcrypt.compareSync(data[1], row.hash_password)) {
                     player.call('C_Auth-handler', ['LOGIN_FAIL']);
                     return [2 /*return*/];
                 }
                 player.call('C_Auth-handler', ['SUCCESS_LOGIN']);
-                mp.events.call('playerAuth', (player));
+                mp.events.call('playerAuth', player, row);
+                player.setVariable('userId', row.id);
+                player.auth = true;
                 player.alpha = 255;
-                player.dimension = 0;
-                player.position = new mp.Vector3(-1402.4600830078125, -152.7124786376953, 47.661441802978516);
+                player.dimension = row.last_position.dimension;
+                player.position = new mp.Vector3(row.last_position.x, row.last_position.y, row.last_position.z);
                 return [3 /*break*/, 5];
             case 4:
                 err_2 = _a.sent();
@@ -201,4 +198,41 @@ mp.events.add('S_SendRegisterCredentialsToServer', function (player, args) { ret
         }
     });
 }); });
-/** 3 этап. Пускаем игрока на сервер */
+/** Методы */
+function savePlayerLastPosition(player) {
+    return __awaiter(this, void 0, void 0, function () {
+        var id, lastPosition, conn, err_4;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    if (!player.auth)
+                        return [2 /*return*/];
+                    id = player.getVariable('userId');
+                    lastPosition = {
+                        x: player.position.x,
+                        y: player.position.y,
+                        z: player.position.z,
+                        dimension: player.dimension
+                    };
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 4, , 5]);
+                    return [4 /*yield*/, db.getConnection()];
+                case 2:
+                    conn = _a.sent();
+                    console.log(lastPosition);
+                    return [4 /*yield*/, conn.query("UPDATE users SET last_position=(?) WHERE id=(?)", [lastPosition, id])];
+                case 3:
+                    _a.sent();
+                    return [3 /*break*/, 5];
+                case 4:
+                    err_4 = _a.sent();
+                    log.error(err_4);
+                    return [3 /*break*/, 5];
+                case 5: return [2 /*return*/];
+            }
+        });
+    });
+}
+/** События */
+mp.events.add('playerQuit', savePlayerLastPosition);

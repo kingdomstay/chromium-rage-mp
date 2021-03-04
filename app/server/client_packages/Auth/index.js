@@ -55,18 +55,20 @@ mp.events.add('C_Auth-needRegister', function () {
     }, 2000);
 });
 mp.events.add('C_AuthWindowLoaded', function () {
-    mp.console.logInfo('work');
     mp.events.callRemote('S_AuthWindowLoaded');
 });
 mp.events.add('C_Auth-handler', function (key) {
-    mp.console.logInfo(key);
     switch (key) {
         case 'SUCCESS_LOGIN':
-            mp.gui.notifications.show('Вы вошли в аккаунт', 'success');
+            mp.gui.notifications.show('Вы вошли в аккаунт', {
+                type: "success"
+            });
             authorizated();
             break;
         case 'SUCCESS_REGISTER':
-            mp.gui.notifications.show('Вы успешно зарегистрировались', 'success');
+            mp.gui.notifications.show('Вы успешно зарегистрировались', {
+                type: "success"
+            });
             authBrowser.execute('playerRegistered()');
             break;
         default:
@@ -114,7 +116,6 @@ function authorizated() {
     mp.game.ui.displayRadar(true);
 }
 function tryRegister(args) {
-    mp.console.logInfo('work');
     var data = JSON.parse(args);
     if (!(data[0] && data[1] && data[2] && data[3])) {
         errorHandler('BAD_DATA');
@@ -149,45 +150,64 @@ function tryLogin(args) {
 function errorHandler(key) {
     switch (key) {
         case 'NO_EQUAL_PASSWORDS':
-            mp.gui.notifications.show('Пароли не совпадают', 'error');
+            mp.gui.notifications.show('Пароли не совпадают', {
+                type: "error"
+            });
             authBrowser.execute('loading(false)');
             break;
         case 'BAD_PASSWORD':
-            mp.gui.notifications.show('Пароль небезопасен, введите другой пароль', 'error');
+            mp.gui.notifications.show('Пароль небезопасен, введите другой пароль', {
+                type: "error"
+            });
             authBrowser.execute('loading(false)');
             break;
         case 'WRONG_PASSWORD':
-            mp.gui.notifications.show('Неверный пароль', 'error');
+            mp.gui.notifications.show('Неверный пароль', {
+                type: "error"
+            });
             authBrowser.execute('loading(false)');
             break;
         case 'BAD_LOGIN':
-            mp.gui.notifications.show('Логин некорректен', 'error');
+            mp.gui.notifications.show('Логин некорректен', {
+                type: "error"
+            });
             authBrowser.execute('loading(false)');
             break;
         case 'BAD_EMAIL':
-            mp.gui.notifications.show('Введите корректный email', 'error');
+            mp.gui.notifications.show('Введите корректный email', {
+                type: "error"
+            });
             authBrowser.execute('loading(false)');
             break;
         case 'EMAIL_BUSY':
-            mp.gui.notifications.show('Данный email уже занят', 'error');
+            mp.gui.notifications.show('Данный email уже занят', {
+                type: "error"
+            });
             authBrowser.execute('loading(false)');
             break;
         case 'LOGIN_BUSY':
-            mp.gui.notifications.show('Данный логин уже занят', 'error');
+            mp.gui.notifications.show('Данный логин уже занят', {
+                type: "error"
+            });
             authBrowser.execute('loading(false)');
             break;
         case 'BAD_DATA':
-            mp.gui.notifications.show('Заполнены не все поля', 'error');
+            mp.gui.notifications.show('Заполнены не все поля', {
+                type: "error"
+            });
             authBrowser.execute('loading(false)');
             break;
         case 'LOGIN_FAIL':
-            mp.gui.notifications.show('Неправильный логин или пароль', 'error');
+            mp.gui.notifications.show('Неправильный логин или пароль', {
+                type: "error"
+            });
             authBrowser.execute('loading(false)');
             authBrowser.execute('resetPasswordField()');
             break;
         default:
-            mp.gui.notifications.show('Ошибка на стороне сервера. Повторите попытку позже', 'error');
-            mp.console.logInfo(key);
+            mp.gui.notifications.show('Ошибка на стороне сервера. Повторите попытку позже', {
+                type: "error"
+            });
             break;
     }
 }
