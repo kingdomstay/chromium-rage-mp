@@ -1,4 +1,6 @@
 "use strict";
+/** Basic */
+require('./Basic/commands');
 /** Auth */
 require('./Auth');
 /** Jobs */
@@ -6,6 +8,8 @@ require('./Jobs');
 require('./Jobs/busDriver');
 /** Utils */
 require('./Utils/notify');
+/** Money System */
+require('./Money/Core');
 /** Банкоматы **
 x: -1305.343505859375, y: -706.3318481445312, z: 24.322437286376953
 x: -254.44949340820312, y: -692.4675903320312, z: 32.60752868652344

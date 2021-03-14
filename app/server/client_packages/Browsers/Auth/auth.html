@@ -1,110 +1,90 @@
 <!DOCTYPE html>
-<html lang="ru" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>Auth</title>
-    <link href="../assets/stylesheets/main.css" rel="stylesheet">
-    <link href="style.css" rel="stylesheet">
-  </head>
-  <body>
-    <div class="backdrop">
-      <div class="modal">
-        <div class="content content-loading">
-          <p class="text">Выполняется загрузка информации об аккаунте..</p>
-        </div>
-        <div class="content content-login">
-          <input class="input content-login__login" placeholder="Ваш логин" name="login-login">
-          <input class="input content-login__pass" type="password" placeholder="и пароль" name="login-password">
-        </div>
-        <div class="content content-register">
-          <h1 class="title">Регистрация</h1>
-          <input class="input" placeholder="Логин" name="reg-username">
-          <input class="input" placeholder="Email" name="reg-email">
-          <input class="input" type="password" placeholder="Пароль" name="reg-password">
-          <input class="input" type="password" placeholder="Повторите пароль" name="reg-repeat-password">
-          <!--<input type="submit" class="submit" value="Продолжить">-->
-        </div>
-        <span class="logo">CHROMIUM RP</span>
-      </div>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <link href="../assets/stylesheets/main.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Auth</title>
+</head>
+
+<body>
+<div class="lock"></div>
+<main class="main backdrop">
+  <section class="main__pages">
+
+    <div class="main__page page page__loading">
     </div>
-    <script src="../assets/libs/jquery.min.js"></script>
-    <script type="text/javascript">
-    let disabled = false
-    let currentSlide = "loading";
+    <div class="main__page page page__login">
+      <header class="title">
+        <h1>Вход</h1>
+        <h2 onclick="redirectTo('register')">Регистрация</h2>
+      </header>
+      <form class="content">
+        <input type="text" class="input-text" name="login__login" placeholder="Никнейм или email">
+        <input type="password" class="input-text" name="login__password" placeholder="Пароль">
+        <span class="label label_footer" onclick="redirectTo('forgot-password')" name="login__forgot-password">Забыли пароль?</span>
+      </form>
+    </div>
 
+    <div class="main__page page page__register">
+      <header class="title">
+        <h1>Регистрация</h1>
+        <h2 onclick="redirectTo('login')">Вход</h2>
+      </header>
+      <form class="content">
+        <input type="text" class="input-text" name="register__username" placeholder="Никнейм">
+        <span class="label">Необходим только для входа в профиль, не является вашим игровым именем</span>
+        <input type="email" class="input-text" name="register__email" placeholder="Email">
+        <input type="password" class="input-text" name="register__password" placeholder="Пароль">
+        <input type="password" class="input-text" name="register__repeat-password" placeholder="Повторите пароль">
+        <span class="label label_footer">Продолжая, вы подтверждаете политику обработки персональных данных, которую Вы можете просмотреть на сайте chromiumrp.ru/privacy</span>
+      </form>
+    </div>
 
-    $(document).ready(() => {
-      mp.trigger('C_AuthWindowLoaded')
-    });
-    $(document).keydown((e) => {
-      if (disabled) {
-        return
-      }
-      if (e.key == "Enter") {
-        if (currentSlide == 'login') {
-          tryLogin()
-        } else if (currentSlide == 'register') {
-          tryRegister()
-        }
-      }
-    });
+    <div class="main__page page page__forgot-password">
+      <header class="title">
+        <h1>Сброс пароля</h1>
+        <h2 onclick="redirectTo('login')">Войти</h2>
+      </header>
+      <form class="content">
+        <input type="text" class="input-text" name="forgot-password__nickname" placeholder="Никнейм">
+        <input type="email" class="input-text" name="forgot-password__email" placeholder="Email">
+      </form>
+    </div>
 
-    function redirectToSlide(name) {
-      $(`.content-${currentSlide}`).css("opacity", "0");
-      setTimeout(() => {
-        $(`.content-${currentSlide}`).css("display", "none");
-        currentSlide = name;
-        $(`.content-${name}`).css("display", "flex");
-        $(`.content-${name}`).css("opacity", "0.005");
-        setTimeout(() => {
-          $(`.content-${name}`).css("opacity", "1");
-        }, 100);
-      }, 200);
-    }
-    function loading(state) {
-      if (state) {
-        disabled = true
-        $('input[name="reg-username"]').prop('disabled', true)
-        $('input[name="reg-email"]').prop('disabled', true)
-        $('input[name="reg-password"]').prop('disabled', true)
-        $('input[name="reg-repeat-password"]').prop('disabled', true)
-        $('input[name="login-login"]').prop('disabled', true)
-        $('input[name="login-password"]').prop('disabled', true)
-      } else {
-        disabled = false
-        $('input[name="reg-username"]').prop('disabled', false)
-        $('input[name="reg-email"]').prop('disabled', false)
-        $('input[name="reg-password"]').prop('disabled', false)
-        $('input[name="reg-repeat-password"]').prop('disabled', false)
-        $('input[name="login-login"]').prop('disabled', false)
-        $('input[name="login-password"]').prop('disabled', false)
-      }
-    }
-    function resetRegisterFields() {
-      $('input[name="reg-username"]').val('')
-      $('input[name="reg-email"]').val('')
-      $('input[name="reg-password"]').val('')
-      $('input[name="reg-repeat-password"]').val('')
-    }
-    function resetPasswordField() {
-      $('input[name="login-password"]').val('')
-      $('input[name="login-password"]').focus()
-    }
+    <div class="main__page page page__create-character">
+      <header class="title">
+        <h1>Создание персонажа (не работает)</h1>
+        <h2 onclick="redirectTo('select-character')">Назад</h2>
+      </header>
+      <form class="content">
+        <input type="text" required class="input-text" placeholder="Имя">
+        <input type="text" required class="input-text" placeholder="Фамилия">
+        <input type="text" class="input-text input-text_promocode" placeholder="Инвайт код">
+        <span class="label">Необязательное поле</span>
+      </form>
+    </div>
 
-    function tryRegister() {
-      loading(true)
-      mp.trigger('C_SendRegisterCredentialsToClient', `["${$('input[name="reg-username"]').val()}", "${$('input[name="reg-email"]').val()}", "${$('input[name="reg-password"]').val()}", "${$('input[name="reg-repeat-password"]').val()}"]`)
-    }
-    function tryLogin() {
-      loading(true)
-      mp.trigger('C_SendLoginCredentialsToClient', `["${$('input[name="login-login"]').val()}", "${$('input[name="login-password"]').val()}"]`)
-    }
+    <div class="main__page page page__select-character">
+      <header class="title">
+        <h1 id="select-character__title"></h1>
+      </header>
+    </div>
 
-    function playerRegistered() {
-      resetRegisterFields()
-      loading(false)
-      redirectToSlide('login')
-    }
-    </script>
-  </body>
+    <div class="main__page page page__error-message">
+      <p class="error-title">Вы были заблокированы навсегда</p>
+      <p class="error-description">Причина: использование постороннего софта</p>
+    </div>
+
+  </section>
+  <footer class="footer main__branding">
+    <span class="footer__brand">chromium rp</span>
+  </footer>
+
+  <script src="../assets/libs/jquery.min.js"></script>
+  <script src="auth.js"></script>
+</main>
+</body>
 </html>

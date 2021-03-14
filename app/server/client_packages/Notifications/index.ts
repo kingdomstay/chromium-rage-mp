@@ -1,4 +1,8 @@
-const notifyBrowser = mp.browsers.new('package://Browsers/Notifications/notifications.html')
+let notifyBrowser: BrowserMp
+
+mp.events.add('playerReady', () => {
+  notifyBrowser = mp.browsers.new('package://Browsers/Notifications/notifications.html')
+})
 
 mp.events.add('C_PlayerNotify', (msg, options) => {
   switch (options.type) {

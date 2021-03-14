@@ -35,60 +35,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-var regexLogin = /^[a-zA-Z0-9]+([._]?[a-zA-Z0-9]+)*$/;
-var regexPassword = /^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[^\w\d\s:])([^\s]){8,16}$/;
-var authBrowser = mp.browsers.new('package://Browsers/Auth/auth.html');
-var authCamera = mp.cameras.new('default', new mp.Vector3(-1393.0072021484375, -157.15443420410156, 55.08986282348633), new mp.Vector3(0, 0, 0), 40);
-/** Server Zone */
-mp.events.add('C_Auth-initAuth', function () {
-    preAuth();
-});
-mp.events.add('C_Auth-needAuth', function () {
-    setTimeout(function () {
-        authBrowser.execute('redirectToSlide("login")');
-    }, 2000);
-});
-mp.events.add('C_Auth-needRegister', function () {
-    setTimeout(function () {
-        authBrowser.execute('redirectToSlide("register")');
-    }, 2000);
-});
-mp.events.add('C_AuthWindowLoaded', function () {
-    mp.events.callRemote('S_AuthWindowLoaded');
-});
-mp.events.add('C_Auth-handler', function (key) {
-    switch (key) {
-        case 'SUCCESS_LOGIN':
-            mp.gui.notifications.show('Вы вошли в аккаунт', {
-                type: "success"
-            });
-            authorizated();
-            break;
-        case 'SUCCESS_REGISTER':
-            mp.gui.notifications.show('Вы успешно зарегистрировались', {
-                type: "success"
-            });
-            authBrowser.execute('playerRegistered()');
-            break;
-        default:
-            errorHandler(key);
-            break;
-    }
-});
-/** CEF Zone */
-mp.events.add('C_SendLoginCredentialsToClient', function (args) {
-    // TODO: Добавить обработчик ошибок при пользовательском вводе
-    mp.events.callRemote('S_SendLoginCredentialsToServer', args);
-});
-mp.events.add('C_SendRegisterCredentialsToClient', tryRegister);
-/** Methods Zone */
-function preAuth() {
-    var _this = this;
+var authBrowser;
+var authCamera;
+/** Preauth Step */
+mp.events.add('playerReady', function () {
+    authCamera = mp.cameras.new('default', new mp.Vector3(-1393.0072021484375, -157.15443420410156, 55.08986282348633), new mp.Vector3(0, 0, 0), 40);
+    authBrowser = mp.browsers.new('package://Browsers/Auth/auth.html');
     authCamera.pointAtCoord(-1542.977294921875, -77.08079528808594, 64.43563079833984);
     authCamera.setActive(true);
     mp.game.cam.renderScriptCams(true, false, 0, true, false);
-    setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
+    setTimeout(function () { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             mp.gui.cursor.visible = true;
             return [2 /*return*/];
@@ -98,116 +54,161 @@ function preAuth() {
     mp.gui.chat.show(false);
     mp.game.ui.displayHud(false);
     mp.game.ui.displayRadar(false);
-}
-function authorizated() {
-    var _this = this;
-    mp.game.cam.renderScriptCams(false, false, 0, true, false);
+});
+mp.events.add('browserDomReady', function (browser) {
+    if (browser == authBrowser) {
+        mp.events.callRemote('S_AuthWindowReady');
+    }
+});
+/** Finish Stage */
+mp.events.add('playerAuth', function () {
     authCamera.destroy();
     authBrowser.destroy();
-    setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            mp.gui.cursor.visible = false;
-            return [2 /*return*/];
-        });
-    }); }, 0);
     mp.gui.cursor.show(false, false);
     mp.gui.chat.show(true);
     mp.game.ui.displayHud(true);
     mp.game.ui.displayRadar(true);
-}
-function tryRegister(args) {
-    var data = JSON.parse(args);
-    if (!(data[0] && data[1] && data[2] && data[3])) {
-        errorHandler('BAD_DATA');
-        return;
+    mp.game.cam.renderScriptCams(false, false, 0, true, false);
+});
+/** Login */
+mp.events.add('CEF_Auth-SendLoginCredentials', function (data) {
+    data = JSON.parse(data);
+    if (!(data.login && data.password))
+        return statusHanlder("EMPTY_FIELDS");
+    mp.events.callRemote('S_Auth-SendLoginCredentials', JSON.stringify(data));
+});
+/** Register */
+mp.events.add('CEF_Auth-SendRegisterCredentials', function (data) {
+    var regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    var regexLogin = /^[a-zA-Z0-9]+([._]?[a-zA-Z0-9]+)*$/;
+    var regexPassword = /^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[^\w\d\s:])([^\s]){8,16}$/;
+    data = JSON.parse(data);
+    if (!(data.username && data.email && data.password && data.repeatPassword))
+        return statusHanlder("EMPTY_FIELDS");
+    if (!(data.username.match(regexLogin)))
+        return statusHanlder("LOGIN_INVALID");
+    if (!(data.email.match(regexEmail)))
+        return statusHanlder("EMAIL_INVALID");
+    if (!(data.password.match(regexPassword)))
+        return statusHanlder("PASSWORD_INVALID");
+    if (data.password != data.repeatPassword)
+        return statusHanlder("PASSWORD_NOT_EQUAL");
+    mp.events.callRemote('S_Auth-SendRegisterCredentials', JSON.stringify(data));
+});
+/** Select character */
+mp.events.add('CEF_Auth-SendSelectedCharacter', function (id) {
+    mp.events.callRemote('S_Auth-SendSelectedCharacter', id);
+});
+/** Create character */
+// TODO: Создать редактор персонажа
+/** Methods */
+mp.events.add('C_Auth-redirectTo', function (page, data) {
+    if (data === void 0) { data = undefined; }
+    authBrowser.execute("redirectTo(\"" + page + "\")");
+    if (page == "select-character") {
+        if (data) {
+            authBrowser.execute("selectCharacter.generateCharacterCards('" + data + "')");
+        }
+        else {
+            authBrowser.execute("selectCharacter.generateCharacterCards(undefined)");
+        }
     }
-    if (!data[0].match(regexLogin)) {
-        errorHandler('BAD_LOGIN');
-        return;
+    if (data) {
+        if (page == "login") {
+            authBrowser.execute("login.setData(\"" + data + "\")");
+        }
+        if (page == "error-message") {
+            // TODO: Система банов
+        }
     }
-    if (!data[1].match(regexEmail)) {
-        errorHandler('BAD_EMAIL');
-        return;
-    }
-    if (data[2] != data[3]) {
-        errorHandler('NO_EQUAL_PASSWORDS');
-        return;
-    }
-    if (!data[2].match(regexPassword)) {
-        errorHandler('BAD_PASSWORD');
-        return;
-    }
-    mp.events.callRemote('S_SendRegisterCredentialsToServer', args);
-}
-function tryLogin(args) {
-    var data = JSON.parse(args);
-    if (!(data[0] && data[1])) {
-        errorHandler('BAD_DATA');
-        return;
-    }
-    mp.events.callRemote('S_SendLoginCredentialsToServer', args);
-}
-function errorHandler(key) {
+});
+mp.events.add('C_Auth-Handler', statusHanlder);
+function statusHanlder(key) {
+    mp.console.logInfo(key);
     switch (key) {
-        case 'NO_EQUAL_PASSWORDS':
+        case "EMPTY_FIELDS":
+            mp.gui.notifications.show('Заполнены не все поля', {
+                type: "warning"
+            });
+            authBrowser.execute('lock(false)');
+            break;
+        case "LOGIN_BAD":
+            mp.gui.notifications.show('Неверное имя пользователя или пароль', {
+                type: "error"
+            });
+            authBrowser.execute('lock(false)');
+            break;
+        case "EMAIL_INVALID":
+            mp.gui.notifications.show('Некорректный email', {
+                type: "warning"
+            });
+            authBrowser.execute('lock(false)');
+            break;
+        case "PASSWORD_INVALID":
+            mp.gui.notifications.show('Некорректный пароль', {
+                type: "warning"
+            });
+            authBrowser.execute("register.clearPassword()");
+            authBrowser.execute('lock(false)');
+            break;
+        case "PASSWORD_NOT_EQUAL":
             mp.gui.notifications.show('Пароли не совпадают', {
-                type: "error"
+                type: "warning"
             });
-            authBrowser.execute('loading(false)');
+            authBrowser.execute("register.clearPassword()");
+            authBrowser.execute('lock(false)');
             break;
-        case 'BAD_PASSWORD':
-            mp.gui.notifications.show('Пароль небезопасен, введите другой пароль', {
-                type: "error"
-            });
-            authBrowser.execute('loading(false)');
-            break;
-        case 'WRONG_PASSWORD':
-            mp.gui.notifications.show('Неверный пароль', {
-                type: "error"
-            });
-            authBrowser.execute('loading(false)');
-            break;
-        case 'BAD_LOGIN':
-            mp.gui.notifications.show('Логин некорректен', {
-                type: "error"
-            });
-            authBrowser.execute('loading(false)');
-            break;
-        case 'BAD_EMAIL':
-            mp.gui.notifications.show('Введите корректный email', {
-                type: "error"
-            });
-            authBrowser.execute('loading(false)');
-            break;
-        case 'EMAIL_BUSY':
+        case "EMAIL_BUSY":
             mp.gui.notifications.show('Данный email уже занят', {
                 type: "error"
             });
-            authBrowser.execute('loading(false)');
+            authBrowser.execute("register.emailBusy()");
+            authBrowser.execute('lock(false)');
             break;
-        case 'LOGIN_BUSY':
-            mp.gui.notifications.show('Данный логин уже занят', {
+        case "USERNAME_BUSY":
+            mp.gui.notifications.show('Данный никнейм уже занят', {
                 type: "error"
             });
-            authBrowser.execute('loading(false)');
+            authBrowser.execute("register.usernameBusy()");
+            authBrowser.execute('lock(false)');
             break;
-        case 'BAD_DATA':
-            mp.gui.notifications.show('Заполнены не все поля', {
+        case "REGISTER_SUCCESS":
+            mp.gui.notifications.show('Вы успешно зарегистрировались', {
+                type: "success"
+            });
+            authBrowser.execute("register.clearFields()");
+            authBrowser.execute('lock(false)');
+            break;
+        case "LOGIN_SUCCESS":
+            authBrowser.execute('lock(false)');
+            break;
+        case "SС_ALREADY_CONNECTED":
+            mp.gui.notifications.show('Ваш Social Club уже привязан к другому аккаунту', {
                 type: "error"
             });
-            authBrowser.execute('loading(false)');
+            mp.gui.notifications.show('Попробуйте войти в свой аккаунт', {
+                type: "info"
+            });
+            authBrowser.execute("redirectTo(\"login\")");
+            authBrowser.execute("register.clearFields()");
+            authBrowser.execute('lock(false)');
             break;
-        case 'LOGIN_FAIL':
-            mp.gui.notifications.show('Неправильный логин или пароль', {
+        case "SELECTED_CHARACTER_NOT_YOU":
+            mp.gui.notifications.show('Выбранный персонаж не принадлежит вам', {
                 type: "error"
             });
-            authBrowser.execute('loading(false)');
-            authBrowser.execute('resetPasswordField()');
+            authBrowser.execute('lock(false)');
+            break;
+        case "SELECTED_CHARACTER_SUCCESS":
+            mp.gui.notifications.show('Выбранный персонаж принадлежит вам', {
+                type: "info"
+            });
+            authBrowser.execute('lock(false)');
             break;
         default:
-            mp.gui.notifications.show('Ошибка на стороне сервера. Повторите попытку позже', {
+            mp.gui.notifications.show('Неизвестная ошибка', {
                 type: "error"
             });
-            break;
+            authBrowser.execute('lock(false)');
     }
 }

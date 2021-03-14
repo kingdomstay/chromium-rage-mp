@@ -1,5 +1,8 @@
 "use strict";
-var notifyBrowser = mp.browsers.new('package://Browsers/Notifications/notifications.html');
+var notifyBrowser;
+mp.events.add('playerReady', function () {
+    notifyBrowser = mp.browsers.new('package://Browsers/Notifications/notifications.html');
+});
 mp.events.add('C_PlayerNotify', function (msg, options) {
     switch (options.type) {
         case "error":

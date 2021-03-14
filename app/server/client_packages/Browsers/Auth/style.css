@@ -1,114 +1,243 @@
-.modal {
+.main {
   width: 100%;
   height: 100%;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+}
+.main .main__pages {
+  position: relative;
+  flex: 1;
+  opacity: 0.5;
+  transition: 0s opacity;
+}
+.main .main__pages.main__page_active {
+  transition: 0.3s opacity;
+  opacity: 1;
+}
+.main .main__brand {
+  width: 100%;
+  height: 70px;
+}
+
+.footer {
+  opacity: 0.9;
   color: #ffffff;
 }
-.modal .content-login {
+.footer .footer__brand {
+  display: block;
+  text-align: center;
+  text-transform: uppercase;
+  font-family: "Syncopate", sans-serif;
+  font-weight: bold;
+  font-size: 36px;
+  padding-top: 45px;
+  padding-bottom: 30px;
+}
+
+.dev {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  display: flex;
+  z-index: 999;
+}
+
+.page {
   display: none;
-  width: 65%;
+  opacity: 0;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  transition: 0.25s;
+}
+.page.page_predisable {
+  opacity: 0;
+  display: flex;
+}
+.page.page_preactive {
+  opacity: 0.0001;
+  display: flex;
+}
+.page.page_active {
+  opacity: 1;
+  display: flex;
+}
+
+.title {
+  position: absolute;
+  top: 65px;
+  left: 75px;
+  display: flex;
+  align-items: flex-end;
+}
+.title h1 {
+  padding-right: 35px;
+  font-weight: 600;
+  font-size: 56px;
+  color: white;
+}
+.title h2 {
+  font-weight: 600;
+  font-size: 48px;
+  color: rgba(255, 255, 255, 0.5);
+}
+.title h2:hover {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.text {
+  color: #fff;
+  font-weight: 500;
+  padding-top: 5px;
+  font-size: 28px;
+}
+
+.input-text {
+  width: 450px;
+  display: block;
+  color: white;
+  outline: none;
+  font-size: 24px;
+  padding: 10px 15px;
+  border: none;
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.45);
+  border-radius: 15px;
+  margin: 8px 0;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+  line-height: 1.5;
+  transition: 0.1s padding;
+}
+.input-text:hover {
+  padding: 10px 17px;
+  background: rgba(255, 255, 255, 0.2);
+}
+.input-text:focus {
+  padding: 10px 20px;
+  box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.65);
+  background: rgba(255, 255, 255, 0.3);
+}
+.input-text:focus::placeholder {
+  opacity: 0.1;
+}
+.input-text::selection {
+  color: #000000;
+  background: rgba(128, 128, 128, 0.8);
+}
+.input-text::placeholder {
+  color: #ffffff;
+  opacity: 0.55;
+}
+.input-text:after {
+  background: red;
+  color: #fff;
+  content: "*";
+}
+.input-text.input-text_promocode {
+  text-transform: uppercase;
+}
+.input-text.input-text_promocode::placeholder {
+  text-transform: none;
+}
+
+input[type=password] {
+  letter-spacing: 5px;
+}
+input[type=password]::placeholder {
+  letter-spacing: 0;
+}
+
+.content {
+  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  width: 500px;
 }
-.modal .content-login .input {
-  width: 100%;
-  font-size: 64px;
+
+.label {
+  width: calc(100% - 30px);
+  font-size: 14px;
+  line-height: 1.25;
+  padding: 0 15px 5px 15px;
+  color: rgba(255, 255, 255, 0.6);
+}
+.label.label_footer {
+  padding: 5px 15px;
+}
+
+.page__select-character {
+  flex-direction: row;
+}
+.page__select-character .card {
+  margin: 16px;
+  color: rgba(255, 255, 255, 0.7);
+  width: 350px;
+  height: 450px;
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.45);
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
   text-align: center;
 }
-.modal .content-login .input::placeholder {
-  opacity: 1;
-  color: #ffffff;
+.page__select-character .card:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+.page__select-character .card:hover .card__image {
+  filter: grayscale(10%);
+  opacity: 0.9;
+}
+.page__select-character .card .card__image {
+  filter: grayscale(100%);
+  opacity: 0.7;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: pink;
+}
+.page__select-character .card .card__title-icon {
+  font-size: 80px;
+}
+.page__select-character .card .card__title {
+  padding: 15px 10px;
   font-weight: 600;
-  transition: 0.1s;
-}
-.modal .content-login .input:focus::placeholder {
-  opacity: 0.1;
-  transition: 0.1s;
-}
-.modal .content-login .input[type=password] {
-  letter-spacing: 10px;
-}
-.modal .content-login .input[type=password]::placeholder {
-  letter-spacing: 0;
-}
-.modal .content-register {
-  display: none;
-  flex-direction: column;
-  width: 85%;
-  position: fixed;
-  top: 90px;
-}
-.modal .content-register .input {
-  font-size: 48px;
-  width: 50%;
-}
-.modal .title {
-  text-align: left;
-  font-size: 72px;
-  font-weight: bold;
-  padding-bottom: 75px;
-}
-.modal .input {
-  display: block;
-  padding: 0;
-  font-family: "Montserrat", sans-serif;
-  margin-bottom: 15px;
-  font-weight: 600;
-  outline: none;
-  background: transparent;
-  color: #ffffff;
-  border: none;
-}
-.modal .input::placeholder {
-  opacity: 1;
-  color: #ffffff;
-  font-weight: 600;
-  transition: 0.1s;
-}
-.modal .input:focus::placeholder {
-  opacity: 0.1;
-  transition: 0.1s;
-}
-.modal .input[type=password] {
-  letter-spacing: 10px;
-}
-.modal .input[type=password]::placeholder {
-  letter-spacing: 0;
-}
-.modal .text {
   font-size: 24px;
 }
-.modal .submit {
-  width: 25%;
-  display: inherit;
-  outline: none;
-  color: #ffffff;
-  border: none;
-  margin: 10px 0;
-  padding: 0 15px 0 0;
-  background: transparent;
-  font-weight: bold;
-  font-size: 64px;
-  font-family: "Montserrat", sans-serif;
-  cursor: pointer;
-  transition: 0.2s;
+.page__select-character .card .card__item {
+  font-size: 21px;
 }
-.modal .submit:hover {
-  opacity: 0.75;
+
+.page__error-message {
+  color: #fff;
+  text-align: center;
 }
-.modal .logo {
-  color: rgba(245, 245, 245, 0.9);
-  font-family: "Syncopate", sans-serif;
+.page__error-message .error-title {
   font-size: 32px;
-  position: fixed;
-  font-weight: bold;
-  bottom: 30px;
+  font-weight: 600;
 }
-.modal .content {
-  transition: 0.2s opacity;
+.page__error-message .error-description {
+  font-weight: 500;
+  padding-top: 5px;
+  font-size: 28px;
+}
+
+.lock {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 99999999999;
+  display: none;
+}
+.lock.lock_active {
+  display: block;
 }
 
 /*# sourceMappingURL=style.css.map */

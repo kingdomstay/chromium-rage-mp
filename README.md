@@ -7,6 +7,15 @@ Also build __.scss__ files ` npm run sass:build ` or ` npm run sass:watch ` for 
 
 #### Already done:
 - Authentication
+    - Login
+    - Register profile
+    - Character selector
+    - Creating character ❌
+    - Character editor ❌
 - Notifications system
 - Jobs
-    1. Bus Driver
+    - Bus Driver
+    
+#### Other resources
+- [Client-side type definitions](https://github.com/chromiumrp/types-chromiumrp-c/tree/v1.0)
+- [Server-side type definitions](https://github.com/chromiumrp/types-chromiumrp-s/tree/v1.0)

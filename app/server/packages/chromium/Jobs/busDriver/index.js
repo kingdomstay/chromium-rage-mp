@@ -16,6 +16,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var index_1 = require("../index");
+var chalk = require('chalk');
 var vehicles = require('./buses.json');
 var penalty = 0.9;
 var options = {
@@ -182,3 +183,4 @@ function busEndShift(player, failed) {
     }
     unrentBus(player);
 }
+console.log(chalk.green('[JOB]'), 'Bus Driver loaded');

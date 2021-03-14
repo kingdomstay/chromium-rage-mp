@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "@types/ragemp-c": "github:chromiumrp/types-chromiumrp-c#v1.0"
+  }
+}

@@ -4,7 +4,7 @@ const pool = mariadb.createPool({
   host: 'localhost',
   user: 'root',
   password: 'root',
-  database: 'chromium',
+  database: 'chromium_new',
   port: '3307'
 });
 

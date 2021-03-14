@@ -1,3 +1,6 @@
+/** Basic */
+require('./Basic/commands')
+
 /** Auth */
 require('./Auth')
 
@@ -7,6 +10,9 @@ require('./Jobs/busDriver')
 
 /** Utils */
 require('./Utils/notify')
+
+/** Money System */
+require('./Money/Core')
 
 
 /** Банкоматы **

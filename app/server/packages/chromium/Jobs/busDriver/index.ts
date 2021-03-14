@@ -8,6 +8,7 @@ import {
     getSalary,
     addToSalary
 } from "../index";
+const chalk = require('chalk')
 
 interface Vehicles {
     transform: {x: number, y: number, z: number},
@@ -175,3 +176,6 @@ function busEndShift(player: PlayerMp, failed: boolean = false) {
     }
     unrentBus(player)
 }
+
+
+console.log(chalk.green('[JOB]'), 'Bus Driver loaded')
